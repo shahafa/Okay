@@ -1,10 +1,14 @@
+package com.okay;
+
+import com.okay.inspectors.IInspector;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Investigator {
 
     private static Investigator instance = null;
-    private List<IObserver> observersList;
+    private List<IInspector> observersList;
 
     protected  Investigator() {
         registerObservers();
@@ -18,11 +22,11 @@ public class Investigator {
     }
 
     private void registerObservers() {
-        observersList = new ArrayList<IObserver>();
+        observersList = new ArrayList<IInspector>();
     }
 
     public void investigate(Charge charge) {
-        for(IObserver observer : observersList) {
+        for(IInspector observer : observersList) {
             System.out.print(observer);
         }
     }
