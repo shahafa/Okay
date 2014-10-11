@@ -8,7 +8,7 @@ import java.util.List;
 public class Investigator {
 
     private static Investigator instance = null;
-    private List<IInspector> observersList;
+    private List<IInspector> inspectorList;
 
     protected  Investigator() {
         registerObservers();
@@ -22,12 +22,12 @@ public class Investigator {
     }
 
     private void registerObservers() {
-        observersList = new ArrayList<IInspector>();
+        inspectorList = new ArrayList<IInspector>();
     }
 
     public void investigate(Charge charge) {
-        for(IInspector observer : observersList) {
-            System.out.print(observer);
+        for(IInspector inspector : inspectorList) {
+            System.out.print(inspector);
         }
     }
 }

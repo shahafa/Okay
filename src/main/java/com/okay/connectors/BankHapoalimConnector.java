@@ -9,10 +9,10 @@ import com.amazonaws.services.dynamodbv2.model.*;
 import com.okay.Account;
 import com.okay.Charge;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BankHapoalimConnector implements IConnector {
@@ -74,6 +74,7 @@ public class BankHapoalimConnector implements IConnector {
         return account;
     }
 
+
     public List<Charge> getCharges(int accountNumber) {
         List<Charge> chargesList = new ArrayList<>();
 
@@ -110,12 +111,18 @@ public class BankHapoalimConnector implements IConnector {
         charge.setId(Integer.parseInt(chargeItem.get("Charge_Id").getN()));
         charge.setAccountNumber(Integer.parseInt(chargeItem.get("Account_Number").getN()));
         charge.setPurchaseAmount(Double.parseDouble(chargeItem.get("Purchase_Amount").getN()));
-        charge.setNumberOfPayments(chargeItem.get("Number_Of_Payments_In_Purchase").getS());
-        charge.setPurchaseDate(chargeItem.get("Purchase_Date").getS());
-        charge.setPurchaseTime(chargeItem.get("Purchase_Time").getS());
+        charge.setNumberOfPayments(Integer.parseInt(chargeItem.get("Number_Of_Payments_In_Purchase").getS()));
         charge.setBusinessName(chargeItem.get("Business_Name").getS());
         charge.setBusinessLocation(chargeItem.get("Business_Location").getS());
         charge.setCategory(chargeItem.get("Payment_Category").getS());
+
+        String purchaseDateTime = String.format("%s%s", chargeItem.get("Purchase_Date").getS(), chargeItem.get("Purchase_Time").getS());
+        DateFormat formatter = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+        try {
+            charge.setPurchaseDateTime(formatter.parse(purchaseDateTime));
+        } catch (ParseException e) {
+            // todo: handle exception
+        }
 
         return charge;
     }
