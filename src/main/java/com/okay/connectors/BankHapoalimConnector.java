@@ -12,7 +12,10 @@ import com.okay.Charge;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class BankHapoalimConnector implements IConnector {
@@ -20,8 +23,8 @@ public class BankHapoalimConnector implements IConnector {
     private static final String ACCESS_KEY = "AKIAJLJR7QC4QQZT4SMA";
     private static final String SECRET_KEY = "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";
     private static final String CREDIT_CARD_TRANSACTION_TABLE = "CreditCards4";
-    
-    private AmazonDynamoDBClient dbClient;
+
+    private final AmazonDynamoDBClient dbClient;
 
     public BankHapoalimConnector() {
 
@@ -78,7 +81,7 @@ public class BankHapoalimConnector implements IConnector {
     public List<Charge> getCharges(int accountNumber) {
         List<Charge> chargesList = new ArrayList<>();
 
-        Map<String,Condition> keyConditions = new HashMap<>();
+        Map<String, Condition> keyConditions = new HashMap<>();
         Condition hashKeyCondition = new Condition()
                 .withComparisonOperator(ComparisonOperator.EQ.toString())
                 .withAttributeValueList(new AttributeValue().withN(Integer.toString(accountNumber)));
@@ -86,7 +89,7 @@ public class BankHapoalimConnector implements IConnector {
         keyConditions.put("Account_Number", hashKeyCondition);
 
 
-        Map<String,AttributeValue>lastEvaluatedKey=null;
+        Map<String, AttributeValue> lastEvaluatedKey = null;
 
         do {
             QueryRequest queryRequest = new QueryRequest()
@@ -96,11 +99,11 @@ public class BankHapoalimConnector implements IConnector {
 
             QueryResult result = dbClient.query(queryRequest);
 
-            List<Map<String,AttributeValue>> chargeItems = result.getItems();
+            List<Map<String, AttributeValue>> chargeItems = result.getItems();
             chargesList.addAll(chargeItems.stream().map(this::deserializeChargeItem).collect(Collectors.toList()));
 
-            lastEvaluatedKey=result.getLastEvaluatedKey();
-        } while(lastEvaluatedKey!=null);
+            lastEvaluatedKey = result.getLastEvaluatedKey();
+        } while (lastEvaluatedKey != null);
 
         return chargesList;
     }

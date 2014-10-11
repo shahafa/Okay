@@ -10,23 +10,23 @@ public class Investigator {
     private static Investigator instance = null;
     private List<IInspector> inspectorList;
 
-    protected  Investigator() {
+    protected Investigator() {
         registerObservers();
     }
 
     public static Investigator getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new Investigator();
         }
         return instance;
     }
 
     private void registerObservers() {
-        inspectorList = new ArrayList<IInspector>();
+        inspectorList = new ArrayList<>();
     }
 
     public void investigate(Charge charge) {
-        for(IInspector inspector : inspectorList) {
+        for (IInspector inspector : inspectorList) {
             System.out.print(inspector);
         }
     }

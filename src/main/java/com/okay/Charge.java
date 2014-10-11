@@ -15,9 +15,10 @@ public class Charge {
     private String businessLocation;
     private String category;
 
-    public Charge() { }
+    public Charge() {
+    }
 
-    public Charge (DBObject chargeObject) {
+    public Charge(DBObject chargeObject) {
         deserialize(chargeObject);
     }
 
@@ -85,7 +86,7 @@ public class Charge {
         this.category = category;
     }
 
-    public DBObject serialize() {
+    public BasicDBObject serialize() {
 
         return new BasicDBObject()
                 .append("id", getId())
@@ -99,8 +100,7 @@ public class Charge {
     }
 
 
-    public void deserialize(DBObject chargeObject)
-    {
+    public void deserialize(DBObject chargeObject) {
         setId(Integer.parseInt(chargeObject.get("id").toString()));
         setAccountNumber(Integer.parseInt(chargeObject.get("account_number").toString()));
         setPurchaseAmount(Double.parseDouble(chargeObject.get("purchase_amount").toString()));
@@ -108,6 +108,6 @@ public class Charge {
         setBusinessName(chargeObject.get("business_name").toString());
         setBusinessLocation(chargeObject.get("business_location").toString());
         setCategory(chargeObject.get("category").toString());
-        setPurchaseDateTime((Date)chargeObject.get("purchase_date_time"));
+        setPurchaseDateTime((Date) chargeObject.get("purchase_date_time"));
     }
 }
